@@ -6,12 +6,19 @@ import { Thermometer, CheckCircle, XCircle } from 'lucide-react';
 interface TableRow {
   id: number;
   roomName: string;
+  sensor: string;
   presenceDetected: boolean;
   temperature: string;
   timestamp: string;
 }
 
 const SensorLogsPage = () => {
+  const [tableData, setTableData] = useState<TableRow[]>(() => []);
+
+  useEffect(() => {
+    setTableData(generateTableData());
+  }, []);
+
   const getRandomTemperature = () => {
     return (Math.random() * (25 - 18) + 18).toFixed(1);
   };
@@ -29,22 +36,30 @@ const SensorLogsPage = () => {
     });
   };
 
-  const [tableData, setTableData] = useState<TableRow[]>(() => []);
-
-  useEffect(() => {
-    setTableData(generateTableData());
-  }, []);
+  const getRandomSensor = () => {
+    const sensors = [
+      "DHT11 Temperature & Humidity",
+      "PIR Motion Sensor",
+      "MQ-2 Gas Sensor",
+      "HC-SR04 Ultrasonic",
+      "BMP180 Barometric Pressure",
+      "TSL2561 Light Sensor",
+      "Sound Sensor Module",
+      "Soil Moisture Sensor"
+    ];
+    return sensors[Math.floor(Math.random() * sensors.length)];
+  };
 
   const generateTableData = (): TableRow[] => {
     return [
-      { id: 1, roomName: "WZ301", presenceDetected: false, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
-      { id: 2, roomName: "LB102", presenceDetected: true, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
-      { id: 3, roomName: "CR205", presenceDetected: false, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
-      { id: 4, roomName: "OF401", presenceDetected: true, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
-      { id: 5, roomName: "MR103", presenceDetected: false, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
-      { id: 6, roomName: "KT501", presenceDetected: true, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
-      { id: 7, roomName: "BR202", presenceDetected: false, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
-      { id: 8, roomName: "LG001", presenceDetected: true, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
+      { id: 1, roomName: "WZ301", sensor: getRandomSensor(), presenceDetected: false, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
+      { id: 2, roomName: "LB102", sensor: getRandomSensor(), presenceDetected: true, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
+      { id: 3, roomName: "CR205", sensor: getRandomSensor(), presenceDetected: false, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
+      { id: 4, roomName: "OF401", sensor: getRandomSensor(), presenceDetected: true, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
+      { id: 5, roomName: "MR103", sensor: getRandomSensor(), presenceDetected: false, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
+      { id: 6, roomName: "KT501", sensor: getRandomSensor(), presenceDetected: true, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
+      { id: 7, roomName: "BR202", sensor: getRandomSensor(), presenceDetected: false, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
+      { id: 8, roomName: "LG001", sensor: getRandomSensor(), presenceDetected: true, temperature: getRandomTemperature(), timestamp: getRandomTimestamp() },
     ];
   };
 
@@ -63,6 +78,7 @@ const SensorLogsPage = () => {
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room Name</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sensor</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Presence Detected</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Temperature</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
@@ -73,6 +89,7 @@ const SensorLogsPage = () => {
                 <tr key={row.id} className="hover:bg-gray-50 transition-colors duration-200">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{row.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.roomName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.sensor}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {row.presenceDetected ? (
                       <span className="flex items-center text-green-500">
@@ -103,4 +120,4 @@ const SensorLogsPage = () => {
   );
 };
 
-export default SensorLogsPage;
+export default SensorLogsPage;1
