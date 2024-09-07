@@ -9,7 +9,7 @@ import { API_BASE_URL, API_KEY } from '../../config';
 interface TableRow {
   id: number;
   roomName: string;
-  sensor: string;
+  sensorName: string;
   presenceDetected: boolean;
   temperature: string;
   timestamp: string;
@@ -37,9 +37,9 @@ const SensorLogsPage: React.FC = () => {
       const logs = response.data.logs;
       setTableData(logs.map((log: TableRow) => ({
         id: log.id,
-        roomName: log.roomName,
-        sensor: log.sensor,
-        presenceDetected: log.presenceDetected,
+        roomName: log.room_name,
+        sensorName: log.sensor_name,
+        presenceDetected: log.presence_detected,
         temperature: log.temperature,
         timestamp: new Date(log.timestamp).toLocaleString('en-US', { 
           month: 'short', 
@@ -83,7 +83,7 @@ const SensorLogsPage: React.FC = () => {
                   <tr key={row.id} className="hover:bg-gray-50 transition-colors duration-200">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{row.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.roomName}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.sensor}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.sensorName}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {row.presenceDetected ? (
                         <span className="flex items-center text-green-500">
@@ -119,7 +119,7 @@ const SensorLogsPage: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="text-gray-700">Room: {row.roomName}</div>
-                  <div className="text-gray-700">Sensor: {row.sensor}</div>
+                  <div className="text-gray-700">Sensor: {row.sensorName}</div>
                   <div className="text-gray-700 flex items-center">
                     Presence: 
                     {row.presenceDetected ? (
