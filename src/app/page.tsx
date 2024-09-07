@@ -1,14 +1,19 @@
 import React from 'react';
+import Image from 'next/image';
 import { Thermometer, CheckCircle, XCircle } from 'lucide-react';
 import { API_BASE_URL, API_KEY } from '../config';
 
 const getTemperature = async (roomId: string): Promise<string> => {
+  console.log('API_BASE_URL:', API_BASE_URL);
+  console.log('API_KEY:', API_KEY);
   try {
+    const headers = {
+      'Accept': 'application/json',
+      'X-API-KEY': API_KEY
+    } as const;
+
     const response = await fetch(`${API_BASE_URL}api/temperature/${roomId}`, {
-      headers: {
-        'Accept': 'application/json',
-        'X-API-KEY': API_KEY
-      }
+      headers: headers as HeadersInit
     });
     
     if (!response.ok) {
@@ -24,10 +29,12 @@ const getTemperature = async (roomId: string): Promise<string> => {
 };
 
 const fetchRoomAvailability = async (roomId: string) => {
+  const headers = {
+    'X-API-KEY': API_KEY
+  } as const;
+
   const response = await fetch(`${API_BASE_URL}api/check_occupancy/${roomId}/`, {
-    headers: {
-      'X-API-KEY': API_KEY
-    }
+    headers: headers as HeadersInit
   });
   const data = await response.json();
   console.log(data);
@@ -77,10 +84,11 @@ export default async function Home() {
       {updatedListings.map((listing) => (
         <div key={listing.id} className="bg-white rounded-xl overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg">
           <div className="relative aspect-w-16 aspect-h-9">
-            <img
+            <Image
               src={listing.imageUrl}
               alt={listing.imageAlt}
-              className="w-full h-full object-cover"
+              layout="fill"
+              objectFit="cover"
             />
             <div className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md flex items-center">
               <Thermometer className="text-rose-500 mr-1" size={16} />

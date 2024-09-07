@@ -4,7 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 import React, { useState, useEffect } from 'react';
 import { Thermometer, CheckCircle, XCircle } from 'lucide-react';
 import axios from 'axios';
-import { API_BASE_URL, API_KEY } from '../config';
+import { API_BASE_URL, API_KEY } from '../../config';
 
 interface TableRow {
   id: number;
@@ -15,32 +15,31 @@ interface TableRow {
   timestamp: string;
 }
 
-const SensorLogsPage = () => {
-  const [tableData, setTableData] = useState<TableRow[]>(() => []);
+const SensorLogsPage: React.FC = () => {
+  const [tableData, setTableData] = useState<TableRow[]>([]);
 
   useEffect(() => {
     fetchSensorLogs();
-
     const intervalId = setInterval(fetchSensorLogs, 10000);
-
     return () => clearInterval(intervalId);
   }, []);
 
   const fetchSensorLogs = async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}api/sensor/logs`, {
+      const response = await axios.get<{ logs: TableRow[] }>(`${API_BASE_URL}api/sensor/logs`, {
         headers: {
           'Accept': 'application/json',
           'X-API-KEY': API_KEY
         },
         withCredentials: true
       });
+      
       const logs = response.data.logs;
-      setTableData(logs.map((log: any, index: number) => ({
+      setTableData(logs.map((log: TableRow) => ({
         id: log.id,
-        roomName: log.room_name,
-        sensor: log.sensor_name,
-        presenceDetected: log.presence_detected,
+        roomName: log.roomName,
+        sensor: log.sensor,
+        presenceDetected: log.presenceDetected,
         temperature: log.temperature,
         timestamp: new Date(log.timestamp).toLocaleString('en-US', { 
           month: 'short', 
@@ -53,7 +52,6 @@ const SensorLogsPage = () => {
     } catch (error) {
       console.error('Error fetching sensor logs:', error);
       setTableData([]);
-      // You might want to set an error state here to display to the user
     }
   };
 
@@ -66,7 +64,6 @@ const SensorLogsPage = () => {
   return (
     <div className="flex-grow w-full px-2 py-4 mx-auto sm:px-4 md:max-w-5xl md:pt-20 md:pb-16">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">Sensor Logs</h2>
-      
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         {isDesktop ? (
           <div className="overflow-x-auto">
