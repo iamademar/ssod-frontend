@@ -1,33 +1,80 @@
 import React from 'react';
 import { Thermometer, CheckCircle, XCircle } from 'lucide-react';
+import { API_BASE_URL, API_KEY } from '../config';
 
-const getRandomTemperature = () => {
-  return (Math.random() * (25 - 18) + 18).toFixed(1);
+const getTemperature = async (roomId: string): Promise<string> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}api/temperature/${roomId}`, {
+      headers: {
+        'Accept': 'application/json',
+        'X-API-KEY': API_KEY
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch temperature');
+    }
+
+    const data = await response.json();
+    return data.temperature.toFixed(1);
+  } catch (error) {
+    console.error('Error fetching temperature:', error);
+    return '20.0'; // Return a default value in case of an error
+  }
+};
+
+const fetchRoomAvailability = async (roomId: string) => {
+  const response = await fetch(`${API_BASE_URL}api/check_occupancy/${roomId}/`, {
+    headers: {
+      'X-API-KEY': API_KEY
+    }
+  });
+  const data = await response.json();
+  console.log(data);
+  return !data.occupied;
 };
 
 const listings = [
   {
     id: 1,
+    roomName: "WZ320",
     title: "WZ 320",
     isAvailable: true,
     imageUrl: "/images/WZ320.png",
     imageAlt: "Meeting Room WZ 320",
-    temperature: getRandomTemperature()
+    temperature: '20.0'
   },
   {
     id: 2,
+    roomName: "WZ321",
     title: "WZ 321",
     isAvailable: false,
     imageUrl: "/images/WZ320.png",
     imageAlt: "Meeting Room WZ 321",
-    temperature: getRandomTemperature()
+    temperature: '20.0'
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const updatedListings = await Promise.all(
+    listings.map(async (listing) => {
+      const [availability, temperature] = await Promise.all([
+        fetchRoomAvailability(listing.roomName),
+        getTemperature(listing.roomName)
+      ]);
+      console.log(`Room ${listing.roomName} availability:`, availability);
+      console.log(`Room ${listing.roomName} temperature:`, temperature);
+      return {
+        ...listing,
+        isAvailable: availability,
+        temperature: temperature
+      };
+    })
+  );
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {listings.map((listing) => (
+      {updatedListings.map((listing) => (
         <div key={listing.id} className="bg-white rounded-xl overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg">
           <div className="relative aspect-w-16 aspect-h-9">
             <img
