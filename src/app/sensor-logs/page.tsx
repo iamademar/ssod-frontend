@@ -8,9 +8,9 @@ import { API_BASE_URL, API_KEY } from '../../config';
 
 interface TableRow {
   id: number;
-  roomName: string;
-  sensorName: string;
-  presenceDetected: boolean;
+  room_name: string;
+  sensor_name: string;
+  presence_detected: boolean;
   temperature: string;
   timestamp: string;
 }
@@ -37,9 +37,9 @@ const SensorLogsPage: React.FC = () => {
       const logs = response.data.logs;
       setTableData(logs.map((log: TableRow) => ({
         id: log.id,
-        roomName: log.room_name,
-        sensorName: log.sensor_name,
-        presenceDetected: log.presence_detected,
+        room_name: log.room_name,
+        sensor_name: log.sensor_name,
+        presence_detected: log.presence_detected,
         temperature: log.temperature,
         timestamp: new Date(log.timestamp).toLocaleString('en-US', { 
           month: 'short', 
@@ -82,10 +82,10 @@ const SensorLogsPage: React.FC = () => {
                 {tableData.map((row) => (
                   <tr key={row.id} className="hover:bg-gray-50 transition-colors duration-200">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{row.id}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.roomName}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.sensorName}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.room_name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.sensor_name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {row.presenceDetected ? (
+                      {row.presence_detected ? (
                         <span className="flex items-center text-green-500">
                           <CheckCircle className="mr-1" size={16} />
                           Yes
@@ -118,11 +118,11 @@ const SensorLogsPage: React.FC = () => {
                   <span className="text-sm text-gray-500">{row.timestamp}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="text-gray-700">Room: {row.roomName}</div>
-                  <div className="text-gray-700">Sensor: {row.sensorName}</div>
+                  <div className="text-gray-700">Room: {row.room_name}</div>
+                  <div className="text-gray-700">Sensor: {row.sensor_name}</div>
                   <div className="text-gray-700 flex items-center">
                     Presence: 
-                    {row.presenceDetected ? (
+                    {row.presence_detected ? (
                       <span className="flex items-center text-green-500 ml-1">
                         <CheckCircle className="mr-1" size={16} />
                         Yes
