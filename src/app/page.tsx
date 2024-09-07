@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { Thermometer, CheckCircle, XCircle } from 'lucide-react';
 import { API_BASE_URL, API_KEY } from '../config';
 
@@ -84,11 +83,10 @@ export default async function Home() {
       {updatedListings.map((listing) => (
         <div key={listing.id} className="bg-white rounded-xl overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg">
           <div className="relative aspect-w-16 aspect-h-9">
-            <Image
+            <img
               src={listing.imageUrl}
               alt={listing.imageAlt}
-              layout="fill"
-              objectFit="cover"
+              className="w-full h-full object-cover"
             />
             <div className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md flex items-center">
               <Thermometer className="text-rose-500 mr-1" size={16} />
