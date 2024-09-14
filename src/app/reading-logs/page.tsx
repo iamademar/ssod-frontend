@@ -25,10 +25,10 @@ const ReadingLogsPage: React.FC = () => {
 
   const fetchReadingLogs = async () => {
     try {
-      console.log('API_BASE_URL:', API_BASE_URL);
-      const url = new URL('api/reading/latest', API_BASE_URL).toString();
-      console.log('Fetching from:', url);
-      const response = await axios.get<{ logs: ReadingLog[] }>(url, {
+      // console.log('API_BASE_URL:', API_BASE_URL);
+      // const url = new URL('api/reading/latest', API_BASE_URL).toString();
+      // console.log('Fetching from:', url);
+      const response = await axios.get<{ logs: ReadingLog[] }>('http://3.27.174.228/backend/api/reading/latest', {
         headers: {
           'Accept': 'application/json',
           'X-API-KEY': API_KEY
