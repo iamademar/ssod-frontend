@@ -20,7 +20,7 @@ const SensorLogsPage: React.FC = () => {
 
   useEffect(() => {
     fetchSensorLogs();
-    const intervalId = setInterval(fetchSensorLogs, 10000);
+    const intervalId = setInterval(fetchSensorLogs, 5000);
     return () => clearInterval(intervalId);
   }, []);
 
