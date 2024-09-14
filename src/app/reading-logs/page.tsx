@@ -28,7 +28,7 @@ const ReadingLogsPage: React.FC = () => {
       console.log('API_BASE_URL:', API_BASE_URL);
       const url = new URL('api/reading/latest', API_BASE_URL).toString();
       console.log('Fetching from:', url);
-      const response = await axios.get<{ logs: ReadingLog[] }>('http://3.27.174.228/backend/api2/reading/latest', {
+      const response = await axios.get<{ logs: ReadingLog[] }>(url, {
         headers: {
           'Accept': 'application/json',
           'X-API-KEY': API_KEY
@@ -36,7 +36,7 @@ const ReadingLogsPage: React.FC = () => {
         withCredentials: true
       });
       console.log(response.data);
-      const logs = Array.isArray(response.data) ? response.data : [];
+      const logs = response.data.logs;
       setTableData(logs.map((log: ReadingLog) => ({
         ...log,
         datetime_recorded_by_sensor: new Date(log.datetime_recorded_by_sensor).toLocaleString('en-US', { 
