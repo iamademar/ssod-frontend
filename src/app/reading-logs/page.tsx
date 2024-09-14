@@ -26,7 +26,9 @@ const ReadingLogsPage: React.FC = () => {
   const fetchReadingLogs = async () => {
     try {
       console.log('API_BASE_URL:', API_BASE_URL);
-      const response = await axios.get<{ logs: ReadingLog[] }>(`${API_BASE_URL}api/reading/latest`, {
+      const url = new URL('api/sensor/logs', API_BASE_URL).toString();
+      console.log('Fetching from:', url);
+      const response = await axios.get<{ logs: ReadingLog[] }>(url, {
         headers: {
           'Accept': 'application/json',
           'X-API-KEY': API_KEY
