@@ -26,6 +26,7 @@ const SensorLogsPage: React.FC = () => {
 
   const fetchSensorLogs = async () => {
     try {
+      console.log('API_BASE_URL:', API_BASE_URL);
       const response = await axios.get<{ logs: TableRow[] }>(`${API_BASE_URL}api/sensor/logs`, {
         headers: {
           'Accept': 'application/json',
