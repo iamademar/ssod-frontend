@@ -1,31 +1,8 @@
-import React from 'react';
-import { Thermometer, CheckCircle, XCircle } from 'lucide-react';
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { CheckCircle, XCircle } from 'lucide-react';
 import { API_BASE_URL, API_KEY } from '../config';
-
-const getTemperature = async (roomId: string): Promise<string> => {
-  console.log('API_BASE_URL:', API_BASE_URL);
-  console.log('API_KEY:', API_KEY);
-  try {
-    const headers = {
-      'Accept': 'application/json',
-      'X-API-KEY': API_KEY
-    } as const;
-
-    const response = await fetch(`${API_BASE_URL}api/temperature/${roomId}`, {
-      headers: headers as HeadersInit
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch temperature');
-    }
-
-    const data = await response.json();
-    return data.temperature.toFixed(1);
-  } catch (error) {
-    console.error('Error fetching temperature:', error);
-    return '20.0'; // Return a default value in case of an error
-  }
-};
 
 const fetchRoomAvailability = async (roomId: string) => {
   const headers = {
@@ -36,7 +13,7 @@ const fetchRoomAvailability = async (roomId: string) => {
     headers: headers as HeadersInit
   });
   const data = await response.json();
-  console.log(data);
+  console.log('fetched data:', data);
   return !data.occupied;
 };
 
@@ -47,36 +24,41 @@ const listings = [
     title: "WZ 320",
     isAvailable: true,
     imageUrl: "/images/WZ320.png",
-    imageAlt: "Meeting Room WZ 320",
-    temperature: '20.0'
+    imageAlt: "Meeting Room WZ 320"
   },
   {
     id: 2,
     roomName: "WZ321",
-    title: "WZ 321",
+    title: "(WIP) WZ 321",
     isAvailable: false,
     imageUrl: "/images/WZ320.png",
-    imageAlt: "Meeting Room WZ 321",
-    temperature: '20.0'
+    imageAlt: "Meeting Room WZ 321"
   },
 ];
 
-export default async function Home() {
-  const updatedListings = await Promise.all(
-    listings.map(async (listing) => {
-      const [availability, temperature] = await Promise.all([
-        fetchRoomAvailability(listing.roomName),
-        getTemperature(listing.roomName)
-      ]);
-      console.log(`Room ${listing.roomName} availability:`, availability);
-      console.log(`Room ${listing.roomName} temperature:`, temperature);
-      return {
-        ...listing,
-        isAvailable: availability,
-        temperature: temperature
-      };
-    })
-  );
+export default function Home() {
+  const [updatedListings, setUpdatedListings] = useState(listings);
+
+  const fetchUpdatedListings = async () => {
+    const newListings = await Promise.all(
+      listings.map(async (listing) => {
+        const availability = await fetchRoomAvailability(listing.roomName);
+        return {
+          ...listing,
+          isAvailable: availability
+        };
+      })
+    );
+    setUpdatedListings(newListings);
+  };
+
+  useEffect(() => {
+    fetchUpdatedListings(); // Fetch immediately on mount
+
+    const intervalId = setInterval(fetchUpdatedListings, 60000); // Refresh every 60 seconds
+
+    return () => clearInterval(intervalId); // Clean up on unmount
+  }, []);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -88,10 +70,6 @@ export default async function Home() {
               alt={listing.imageAlt}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md flex items-center">
-              <Thermometer className="text-rose-500 mr-1" size={16} />
-              <span className="text-sm font-medium text-gray-600">{listing.temperature}°C</span>
-            </div>
           </div>
           <div className="p-4">
             <h2 className="text-lg font-semibold text-gray-900 mb-2">{listing.title}</h2>
