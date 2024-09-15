@@ -2,7 +2,7 @@
 
 import { useMediaQuery } from 'react-responsive';
 import React, { useState, useEffect } from 'react';
-import { Thermometer, CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL, API_KEY } from '../../config';
 
@@ -11,7 +11,6 @@ interface TableRow {
   room_name: string;
   sensor_name: string;
   presence_detected: boolean;
-  temperature: string;
   timestamp: string;
 }
 
@@ -43,7 +42,6 @@ const SensorLogsPage: React.FC = () => {
         room_name: log.room_name,
         sensor_name: log.sensor_name,
         presence_detected: log.presence_detected,
-        temperature: log.temperature,
         timestamp: new Date(log.timestamp).toLocaleString('en-US', { 
           month: 'short', 
           day: 'numeric', 
@@ -77,7 +75,6 @@ const SensorLogsPage: React.FC = () => {
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Room Name</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sensor</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Presence Detected</th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Temperature</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
                 </tr>
               </thead>
@@ -99,12 +96,6 @@ const SensorLogsPage: React.FC = () => {
                           No
                         </span>
                       )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <span className="flex items-center">
-                        <Thermometer className="mr-1 text-rose-500" size={16} />
-                        {row.temperature}°C
-                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.timestamp}</td>
                   </tr>
@@ -136,13 +127,6 @@ const SensorLogsPage: React.FC = () => {
                         No
                       </span>
                     )}
-                  </div>
-                  <div className="text-gray-700 flex items-center">
-                    Temperature: 
-                    <span className="flex items-center ml-1">
-                      <Thermometer className="mr-1 text-rose-500" size={16} />
-                      {row.temperature}°C
-                    </span>
                   </div>
                 </div>
               </div>
