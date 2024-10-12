@@ -29,7 +29,7 @@ const listings = [
   {
     id: 2,
     roomName: "WZ321",
-    title: "(WIP) WZ 321",
+    title: "WZ 321",
     isAvailable: false,
     imageUrl: "/images/WZ320.png",
     imageAlt: "Meeting Room WZ 321"
