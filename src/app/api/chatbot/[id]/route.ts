@@ -63,7 +63,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     const messages = await openai.beta.threads.messages.list(threadId);
     const lastMessage = messages.data[0];
 
-    const response = lastMessage.content[0].text.value;
+    let response = '';
+    if (lastMessage.content[0].type === 'text') {
+      response = lastMessage.content[0].text.value;
+    } else {
+      // Handle the case where the content is not text (e.g., an image)
+      response = "The assistant's response was not in text format.";
+    }
 
     return NextResponse.json({ response });
   } catch (error) {
